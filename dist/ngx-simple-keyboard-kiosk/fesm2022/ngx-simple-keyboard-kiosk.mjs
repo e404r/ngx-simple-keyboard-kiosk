@@ -108,10 +108,14 @@ class NgxSimpleKeyboardKioskComponent {
         }
         const keyRowsDefault = this.languageLayout.layout.default;
         //keyRowsDefault[keyRowsDefault.length - 1] += ' {downkeyboard} {lang}';
-        keyRowsDefault[keyRowsDefault.length - 1] += ' {lang}';
+        // keyRowsDefault[keyRowsDefault.length - 1] += ' {downkeyboard} {lang}';
+        let lastRow = keyRowsDefault[keyRowsDefault.length - 1];
+        lastRow = lastRow.replace('{space}', '{lang} {space} {downkeyboard}');
+        keyRowsDefault[keyRowsDefault.length - 1] = lastRow;
         const keyRowsShift = this.languageLayout.layout.shift;
         // keyRowsShift[keyRowsShift.length - 1] += ' {downkeyboard}';
-        keyRowsShift[keyRowsShift.length - 1] += ' {lang}';
+        // keyRowsShift[keyRowsShift.length - 1] += ' {downkeyboard} {lang}';
+        keyRowsShift[keyRowsShift.length - 1] = lastRow;
         const removeKeys = (row, keysToRemove) => {
             return row.split(' ').filter(key => !keysToRemove.includes(key)).join(' ');
         };
@@ -135,7 +139,7 @@ class NgxSimpleKeyboardKioskComponent {
             display: {
                 '{tab}': '↹',
                 '{bksp}': '⌫',
-                '{downkeyboard}': '\u25BC',
+                '{downkeyboard}': '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"> <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/> </svg>',
                 '{space}': ' ',
                 '{lang}': `${this.flagUrl}`,
                 '{lock}': '⇪',
@@ -212,9 +216,9 @@ class NgxSimpleKeyboardKioskComponent {
             }
         }
         const addSpecialButtons = (row) => {
-            //if (!row.includes('{downkeyboard}')) row += ' {downkeyboard}';
-            if (!row.includes('{lang}'))
-                row += ' {lang}';
+            if (row.includes('{space}') && !row.includes('{lang}') && !row.includes('{downkeyboard}')) {
+                row = row.replace('{space}', '{lang} {space} {downkeyboard}');
+            }
             return row;
         };
         if (keyRowsDefault.length > 0) {
@@ -231,7 +235,7 @@ class NgxSimpleKeyboardKioskComponent {
                 display: {
                     '{tab}': '↹',
                     '{bksp}': '⌫',
-                    '{downkeyboard}': '\u25BC',
+                    '{downkeyboard}': '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"> <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/> </svg>',
                     '{space}': ' ',
                     '{lang}': `${this.flagUrl}`,
                     '{lock}': '⇪',
@@ -256,7 +260,7 @@ class NgxSimpleKeyboardKioskComponent {
                 display: {
                     '{tab}': '↹',
                     '{bksp}': '⌫',
-                    '{downkeyboard}': '\u25BC',
+                    '{downkeyboard}': '<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"> <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/> </svg>',
                     '{space}': ' ',
                     '{lang}': "LANG",
                     '{lock}': '⇪',
@@ -268,38 +272,6 @@ class NgxSimpleKeyboardKioskComponent {
             this.toggleShiftLayout();
             this.toggleShiftLayout();
         }
-    }
-    //private setLanguageLayout(language: 'english' | 'georgian') {
-    //  this.languageLayout = language === 'english' ? englishLayout : georgianlayout;
-    //
-    //  this.languageChange.emit(language);
-    //}
-    setLanguageLayout(language) {
-        // Set the language layout based on the selected language
-        this.languageLayout = language === 'english' ? englishLayout : georgianlayout;
-        // Safely access the default and shift layouts
-        const keyRowsDefault = this.languageLayout?.default || [];
-        const keyRowsShift = this.languageLayout?.shift || [];
-        // Function to add {downkeyboard} and {lang} if not present
-        const addSpecialButtons = (row) => {
-            if (!row.includes('{downkeyboard}')) {
-                row += ' {downkeyboard}';
-            }
-            if (!row.includes('{lang}')) {
-                row += ' {lang}';
-            }
-            return row;
-        };
-        // Modify the last row of the default layout
-        if (keyRowsDefault.length > 0) {
-            keyRowsDefault[keyRowsDefault.length - 1] = addSpecialButtons(keyRowsDefault[keyRowsDefault.length - 1]);
-        }
-        // Modify the last row of the shift layout
-        if (keyRowsShift.length > 0) {
-            keyRowsShift[keyRowsShift.length - 1] = addSpecialButtons(keyRowsShift[keyRowsShift.length - 1]);
-        }
-        // Emit the language change event
-        this.languageChange.emit(language);
     }
     isChildElement(child, target) {
         if (target === child) {
@@ -375,8 +347,8 @@ class NgxSimpleKeyboardKioskComponent {
         // Check if the click was outside both inputElement and keyboardContainer
         if (!inputElementNative || !inputElementNative.contains(event.target)) {
             if (!keyboardContainerNative || !keyboardContainerNative.contains(event.target)) {
-                this.hideKeyboard();
-                this.hideKeyboardToggler();
+                //this.hideKeyboard();
+                // this.hideKeyboardToggler();
             }
         }
     }
@@ -416,10 +388,6 @@ class NgxSimpleKeyboardKioskComponent {
         this.defaultLanguage = this.defaultLanguage === this.secondLanguage
             ? this.originalDefaultLanguage
             : this.secondLanguage;
-        this.switchLanguage(this.defaultLanguage);
-    }
-    handleLangswitchDEF() {
-        this.defaultLanguage = this.defaultLanguage === 'english' ? 'georgian' : 'english';
         this.switchLanguage(this.defaultLanguage);
     }
     handleBackspacePress(pos, posEnd) {
@@ -488,8 +456,7 @@ class NgxSimpleKeyboardKioskComponent {
         this.inputElement.value = before + button + after;
         // Update the cursor position explicitly to prevent reset
         const newPos = pos + button.length;
-        // Log the cursor position to debug
-        //  console.log(`Cursor position before: ${pos}, after: ${newPos}`);
+        //console.log(`Cursor position before: ${pos}, after: ${newPos}`);
         // Set the new cursor position
         this.inputElement.setSelectionRange(newPos, newPos);
         // Refocus the input element to prevent losing focus
@@ -647,7 +614,7 @@ class NgxSimpleKeyboardKioskComponent {
       <div #keyboardToggler id="keyboard-toggler" class="keyboard-wrapper simple-keyboard" (click)="toggleKeyboard()"></div>
     </div>
 </div>
-  `, isInline: true, styles: ["#virtual-keyboard{top:unset;bottom:0;border-radius:10px 10px 0 0;box-sizing:border-box!important;position:fixed;z-index:20000;width:100%;max-width:1440px;background:#e3e3e3;background:linear-gradient(to right bottom,#eee,#ebebeb,#e8e8e8,#e6e6e6,#e3e3e3);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.25),0 0 20px -8px rgba(0,0,0,.15);box-shadow:inset 1px 1px #ffffff40,0 0 20px -8px #00000026;left:0;right:0;margin:auto}#virtual-keyboard .keyboard-wrapper{position:relative;background:inherit;width:100%;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box!important}.hg-button-lang{width:200px;height:200px}\n"] }); }
+  `, isInline: true, styles: ["#virtual-keyboard{top:unset;bottom:0;border-radius:2px 2px 0 0;box-sizing:border-box!important;position:fixed;z-index:20000;width:100%;max-width:1440px;background:#e3e3e3;background:linear-gradient(to right bottom,#eee,#ebebeb,#e8e8e8,#e6e6e6,#e3e3e3);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.25),0 0 20px -8px rgba(0,0,0,.15);box-shadow:inset 1px 1px #ffffff40,0 0 20px -8px #00000026;padding:2px;left:0;right:0;margin:auto}#virtual-keyboard .keyboard-wrapper{position:relative;background:inherit;width:100%;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box!important}\n"] }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImport: i0, type: NgxSimpleKeyboardKioskComponent, decorators: [{
             type: Component,
@@ -659,7 +626,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.3.12", ngImpo
       <div #keyboardToggler id="keyboard-toggler" class="keyboard-wrapper simple-keyboard" (click)="toggleKeyboard()"></div>
     </div>
 </div>
-  `, styles: ["#virtual-keyboard{top:unset;bottom:0;border-radius:10px 10px 0 0;box-sizing:border-box!important;position:fixed;z-index:20000;width:100%;max-width:1440px;background:#e3e3e3;background:linear-gradient(to right bottom,#eee,#ebebeb,#e8e8e8,#e6e6e6,#e3e3e3);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.25),0 0 20px -8px rgba(0,0,0,.15);box-shadow:inset 1px 1px #ffffff40,0 0 20px -8px #00000026;left:0;right:0;margin:auto}#virtual-keyboard .keyboard-wrapper{position:relative;background:inherit;width:100%;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box!important}.hg-button-lang{width:200px;height:200px}\n"] }]
+  `, styles: ["#virtual-keyboard{top:unset;bottom:0;border-radius:2px 2px 0 0;box-sizing:border-box!important;position:fixed;z-index:20000;width:100%;max-width:1440px;background:#e3e3e3;background:linear-gradient(to right bottom,#eee,#ebebeb,#e8e8e8,#e6e6e6,#e3e3e3);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.25),0 0 20px -8px rgba(0,0,0,.15);box-shadow:inset 1px 1px #ffffff40,0 0 20px -8px #00000026;padding:2px;left:0;right:0;margin:auto}#virtual-keyboard .keyboard-wrapper{position:relative;background:inherit;width:100%;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;box-sizing:border-box!important}\n"] }]
         }], ctorParameters: () => [{ type: i0.Renderer2 }, { type: CountryService }, { type: Document, decorators: [{
                     type: Inject,
                     args: [DOCUMENT]

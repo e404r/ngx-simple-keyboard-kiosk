@@ -159,7 +159,57 @@ li.hg-candidate-box-list-item:active {
     color: #444;
 }
 
+
+#virtual-keyboard {
+    top: unset;
+    bottom: 0;
+    border-radius: 2px 2px 0 0;
+
+    box-sizing: border-box !important;
+    position: fixed;
+    z-index: 20000;
+    width: 100%;
+    max-width: 1440px;
+    background: #e3e3e3;
+    background: linear-gradient(to right bottom,#eee,#ebebeb,#e8e8e8,#e6e6e6,#e3e3e3);
+    -webkit-box-shadow: inset 1px 1px 0 rgba(255,255,255,.25),0 0 20px -8px rgba(0,0,0,.15);
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,.25),0 0 20px -8px rgba(0,0,0,.15);
+    padding: 2px;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+#virtual-keyboard .keyboard-wrapper {
+    position: relative;
+    background: inherit;
+    width: 100%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+
+    box-sizing: border-box !important;
+}
+
+
 .hg-button-lang {
     width: 20px !important;
     flex-grow: 0.05 !important;
 }
+
+
+.hg-button-downkeyboard {
+    width: 20px !important;
+    flex-grow: 0.05 !important;
+}
+
+

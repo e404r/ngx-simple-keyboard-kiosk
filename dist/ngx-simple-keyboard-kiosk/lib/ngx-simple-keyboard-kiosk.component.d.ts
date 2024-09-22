@@ -30,7 +30,6 @@ export declare class NgxSimpleKeyboardKioskComponent implements OnInit {
     private updateKeyboardLayout;
     switchLanguage(language: string): void;
     switchLanguageold(language: 'english' | 'georgian'): void;
-    private setLanguageLayout;
     private isChildElement;
     private onChange;
     private onKeyPress;
@@ -40,7 +39,6 @@ export declare class NgxSimpleKeyboardKioskComponent implements OnInit {
     private onKeyPressNumeric;
     private handleEnterPress;
     private handleLangswitch;
-    private handleLangswitchDEF;
     private handleBackspacePress;
     private handleTabPress;
     private handleSpacePress;
